@@ -1,42 +1,45 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import AuthGuard from './components/Auth/AuthSecurity';
+import Dashboard from './components/Layout/Dashboard';
 
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="min-h-screen bg-gray-50">
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/" element={
-              <div className="text-center py-12">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                  Todo App
-                </h1>
-                <p className="text-gray-600 mb-6">
-                  Sistema de autenticação configurado!
-                </p>
-                <div className="space-x-4">
-                  <Link 
-                    to="/login" 
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-                  >
-                    Login
-                  </Link>
-                  <Link 
-                    to="/register" 
-                    className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
-                  >
-                    Cadastrar
-                  </Link>
-                </div>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route 
+            path="/dashboard" 
+            element={
+              <AuthGuard>
+                <Dashboard />
+              </AuthGuard>
+            } 
+          />
+         
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+          <Route path="*" element={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+              <div className="text-center">
+                <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
+                <p className="text-gray-600 mb-6">Página não encontrada</p>
+                <Link 
+                  to="/" 
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                >
+                  Voltar ao início
+                </Link>
               </div>
-            } />
-          </Routes>
-        </div>
+            </div>
+          } />
+        </Routes>
       </AuthProvider>
     </Router>
   );
