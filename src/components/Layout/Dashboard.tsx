@@ -19,31 +19,31 @@ import type { Todo } from '../../services/TodoService';
 
 const TodoItem = ({ 
     todo, 
-    editingTodo, 
-    editTitle, 
-    editDescription, 
-    setEditTitle, 
-    setEditDescription, 
-    handleSaveEdit, 
-    handleCancelEdit, 
-    handleStartEdit, 
-    handleUpdateStatus, 
-    handleDeleteTodo, 
-    getStatusBadge, 
+    editandoTarefa, 
+    tituloEdicao, 
+    descricaoEdicao, 
+    setTituloEdicao, 
+    setDescricaoEdicao, 
+    salvarEdicao, 
+    cancelarEdicao, 
+    comecarEdicaoToDo, 
+    mudaStatus, 
+    apagarTarefa, 
+    statusCards, 
     activeId 
 }: { 
     todo: Todo;
-    editingTodo: string | null;
-    editTitle: string;
-    editDescription: string;
-    setEditTitle: (value: string) => void;
-    setEditDescription: (value: string) => void;
-    handleSaveEdit: (id: string) => void;
-    handleCancelEdit: () => void;
-    handleStartEdit: (todo: Todo) => void;
-    handleUpdateStatus: (id: string, status: 'todo' | 'doing' | 'done') => void;
-    handleDeleteTodo: (id: string) => void;
-    getStatusBadge: (status: string) => React.ReactElement;
+    editandoTarefa: string | null;
+    tituloEdicao: string;
+    descricaoEdicao: string;
+    setTituloEdicao: (value: string) => void;
+    setDescricaoEdicao: (value: string) => void;
+    salvarEdicao: (id: string) => void;
+    cancelarEdicao: () => void;
+    comecarEdicaoToDo: (todo: Todo) => void;
+    mudaStatus: (id: string, status: 'todo' | 'doing' | 'done') => void;
+    apagarTarefa: (id: string) => void;
+    statusCards: (status: string) => React.ReactElement;
     activeId: string | null;
 }) => {
     const {
@@ -67,7 +67,7 @@ const TodoItem = ({
         zIndex: isDragging ? 1000 : 1,
     };
 
-    const isEditing = editingTodo === todo.id;
+    const isEditing = editandoTarefa === todo.id;
     const isActive = activeId === todo.id;
 
     return (
@@ -86,8 +86,8 @@ const TodoItem = ({
                         <div className="space-y-2">
                             <input
                                 type="text"
-                                value={editTitle}
-                                onChange={(e) => setEditTitle(e.target.value)}
+                                value={tituloEdicao}
+                                onChange={(e) => setTituloEdicao(e.target.value)}
                                 className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-500 text-gray-100 placeholder-gray-400"
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
@@ -96,30 +96,30 @@ const TodoItem = ({
                                         if (textarea) {
                                             textarea.focus();
                                         } else {
-                                            handleSaveEdit(todo.id);
+                                            salvarEdicao(todo.id);
                                         }
                                     }
                                     if (e.key === 'Escape') {
                                         e.preventDefault();
-                                        handleCancelEdit();
+                                        cancelarEdicao();
                                     }
                                 }}
                                 placeholder="Título da tarefa..."
                             />
                             <textarea
-                                value={editDescription}
-                                onChange={(e) => setEditDescription(e.target.value)}
+                                value={descricaoEdicao}
+                                onChange={(e) => setDescricaoEdicao(e.target.value)}
                                 rows={3}
                                 className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-500 text-gray-100 placeholder-gray-400 resize-none"
                                 placeholder="Descrição (opcional)..."
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter' && e.ctrlKey) {
                                         e.preventDefault();
-                                        handleSaveEdit(todo.id);
+                                        salvarEdicao(todo.id);
                                     }
                                     if (e.key === 'Escape') {
                                         e.preventDefault();
-                                        handleCancelEdit();
+                                        cancelarEdicao();
                                     }
                                     if (e.key === 'Enter' && !e.ctrlKey) {
                                         e.stopPropagation();
@@ -128,7 +128,7 @@ const TodoItem = ({
                             />
                             <div className="flex gap-3 pt-2">
                                 <button
-                                    onClick={() => handleSaveEdit(todo.id)}
+                                    onClick={() => salvarEdicao(todo.id)}
                                     className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors shadow-sm hover:shadow-md"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@ const TodoItem = ({
                                     Salvar
                                 </button>
                                 <button
-                                    onClick={handleCancelEdit}
+                                    onClick={cancelarEdicao}
                                     className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors shadow-sm hover:shadow-md"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,7 +173,7 @@ const TodoItem = ({
                                 {todo.updatedAt && todo.updatedAt.getTime() !== todo.createdAt?.getTime() && (
                                     <span>✏️ Editado: {todo.updatedAt.toLocaleDateString('pt-BR')}</span>
                                 )}
-                                {getStatusBadge(todo.status)}
+                                {statusCards(todo.status)}
                             </div>
                         </>
                     )}
@@ -182,7 +182,7 @@ const TodoItem = ({
                     <div className="ml-4 flex flex-col gap-3">
                         <select
                             value={todo.status}
-                            onChange={(e) => handleUpdateStatus(todo.id, e.target.value as 'todo' | 'doing' | 'done')}
+                            onChange={(e) => mudaStatus(todo.id, e.target.value as 'todo' | 'doing' | 'done')}
                             className="text-sm bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lime-500 text-gray-100 shadow-sm hover:shadow-md transition-shadow min-w-[140px]"
                         >
                             <option value="todo">📋 A Fazer</option>
@@ -192,7 +192,7 @@ const TodoItem = ({
                         
                         <div className="flex gap-2">
                             <button
-                                onClick={() => handleStartEdit(todo)}
+                                onClick={() => comecarEdicaoToDo(todo)}
                                 className="flex items-center gap-2 px-3 py-2 bg-lime-500/20 text-lime-400 rounded-lg text-sm font-medium hover:bg-lime-500/30 hover:text-lime-300 transition-all shadow-sm hover:shadow-md border border-lime-500/30"
                                 title="Editar tarefa"
                             >
@@ -203,7 +203,7 @@ const TodoItem = ({
                             </button>
                             
                             <button
-                                onClick={() => handleDeleteTodo(todo.id)}
+                                onClick={() => apagarTarefa(todo.id)}
                                 className="flex items-center gap-2 px-3 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/30 hover:text-red-300 transition-all shadow-sm hover:shadow-md border border-red-500/30"
                                 title="Excluir tarefa"
                             >
@@ -225,14 +225,14 @@ const Dashboard = () => {
     const navigate = useNavigate();
 
     const [todos, setTodos] = useState<Todo[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState<'all' | 'todo' | 'doing' | 'done'>('all');
-    const [newTitle, setNewTitle] = useState('');
-    const [newDescription, setNewDescription] = useState('');
-    const [isAddingTodo, setIsAddingTodo] = useState(false);
-    const [editingTodo, setEditingTodo] = useState<string | null>(null);
-    const [editTitle, setEditTitle] = useState('');
-    const [editDescription, setEditDescription] = useState('');
+    const [carregando, setCarregando] = useState(true);
+    const [filtro, setFiltro] = useState<'all' | 'todo' | 'doing' | 'done'>('all');
+    const [tituloNovo, setTituloNovo] = useState('');
+    const [descricaoNova, setDescricaoNova] = useState('');
+    const [adicionandoTarefa, setAdicionandoTarefa] = useState(false);
+    const [editandoTarefa, setEditandoTarefa] = useState<string | null>(null);
+    const [tituloEdicao, setTituloEdicao] = useState('');
+    const [descricaoEdicao, setDescricaoEdicao] = useState('');
     const [activeId, setActiveId] = useState<string | null>(null);
 
     const mouseSensor = useSensor(MouseSensor, {
@@ -253,44 +253,44 @@ const Dashboard = () => {
     useEffect(() => {
         if (!user) return;
 
-        setLoading(true);
+        setCarregando(true);
         const unsubscribe = todoService.subscribe(user.uid, (todosList) => {
             setTodos(todosList);
-            setLoading(false);
+            setCarregando(false);
         });
 
         return unsubscribe;
     }, [user]);
 
-    const filteredTodos = todos.filter(todo => {
-        if (filter === 'all') return true;
-        return todo.status === filter;
+    const tarefasFiltradas = todos.filter(todo => {
+        if (filtro === 'all') return true;
+        return todo.status === filtro;
     });
 
-    const stats = {
+    const numeros = {
         total: todos.length,
         todo: todos.filter(t => t.status === 'todo').length,
         doing: todos.filter(t => t.status === 'doing').length,
         done: todos.filter(t => t.status === 'done').length
     };
 
-    const handleAddTodo = async (e: React.FormEvent) => {
+    const adicionarTarefa = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!user || !newTitle.trim()) return;
+        if (!user || !tituloNovo.trim()) return;
 
         try {
-            setIsAddingTodo(true);
-            await todoService.add(newTitle.trim(), newDescription.trim(), user.uid);
-            setNewTitle('');
-            setNewDescription('');
+            setAdicionandoTarefa(true);
+            await todoService.add(tituloNovo.trim(), descricaoNova.trim(), user.uid);
+            setTituloNovo('');
+            setDescricaoNova('');
         } catch (error) {
             console.error('Erro ao adicionar tarefa:', error);
         } finally {
-            setIsAddingTodo(false);
+            setAdicionandoTarefa(false);
         }
     };
 
-    const handleUpdateStatus = async (todoId: string, newStatus: 'todo' | 'doing' | 'done') => {
+    const mudaStatus = async (todoId: string, newStatus: 'todo' | 'doing' | 'done') => {
         try {
             await todoService.updateStatus(todoId, newStatus);
         } catch (error) {
@@ -298,7 +298,7 @@ const Dashboard = () => {
         }
     };
 
-    const handleDeleteTodo = async (todoId: string) => {
+    const apagarTarefa = async (todoId: string) => {
         if (window.confirm('Tem certeza que deseja excluir esta tarefa?')) {
             try {
                 await todoService.delete(todoId);
@@ -308,12 +308,11 @@ const Dashboard = () => {
         }
     };
 
-    const handleStartEdit = (todo: Todo) => {
-        setEditingTodo(todo.id);
-        setEditTitle(todo.title);
-        setEditDescription(todo.description || '');
-        
-        // Focus no campo título após a renderização
+    const comecarEdicaoToDo = (todo: Todo) => {
+        setEditandoTarefa(todo.id);
+        setTituloEdicao(todo.title);
+        setDescricaoEdicao(todo.description || '');
+
         setTimeout(() => {
             const titleInput = document.querySelector(`input[value="${todo.title}"]`) as HTMLInputElement;
             if (titleInput) {
@@ -323,38 +322,38 @@ const Dashboard = () => {
         }, 50);
     };
 
-    const handleSaveEdit = async (todoId: string) => {
-        if (!editTitle.trim()) return;
+    const salvarEdicao = async (todoId: string) => {
+        if (!tituloEdicao.trim()) return;
         
         try {
             await todoService.updateContent(todoId, { 
-                title: editTitle.trim(),
-                description: editDescription.trim()
+                title: tituloEdicao.trim(),
+                description: descricaoEdicao.trim()
             });
-            setEditingTodo(null);
-            setEditTitle('');
-            setEditDescription('');
+            setEditandoTarefa(null);
+            setTituloEdicao('');
+            setDescricaoEdicao('');
         } catch (error) {
             console.error('Erro ao editar tarefa:', error);
         }
     };
 
-    const handleCancelEdit = () => {
-        setEditingTodo(null);
-        setEditTitle('');
-        setEditDescription('');
+    const cancelarEdicao = () => {
+        setEditandoTarefa(null);
+        setTituloEdicao('');
+        setDescricaoEdicao('');
     };
 
-    const handleLogout = async () => {
+    const sairToDo = async () => {
         try {
             await logout();
-            navigate('/login');
+            navigate('/');
         } catch (error) {
             console.error('Erro ao fazer logout:', error);
         }
     };
 
-    const handleDragEnd = (event: DragEndEvent) => {
+    const finalizouArrasto = (event: DragEndEvent) => {
         const { active, over } = event;
         
         setActiveId(null);
@@ -363,15 +362,15 @@ const Dashboard = () => {
         
         const validStatuses = ['todo', 'doing', 'done'];
         if (validStatuses.includes(over.id as string)) {
-            handleUpdateStatus(active.id as string, over.id as 'todo' | 'doing' | 'done');
+            mudaStatus(active.id as string, over.id as 'todo' | 'doing' | 'done');
         }
     };
 
-    const handleDragStart = (event: DragStartEvent) => {
+    const iniciouArrasto = (event: DragStartEvent) => {
         setActiveId(event.active.id as string);
     };
 
-    const getStatusBadge = (status: string) => {
+    const statusCards = (status: string) => {
         const badges = {
             todo: 'bg-blue-900/50 text-blue-300 border-blue-600/50',
             doing: 'bg-yellow-900/50 text-yellow-300 border-yellow-600/50',
@@ -465,7 +464,7 @@ const Dashboard = () => {
         );
     };
 
-    if (loading) {
+    if (carregando) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex justify-center items-center">
                 <div className="text-center">
@@ -505,7 +504,7 @@ const Dashboard = () => {
                                 <p className="text-xs text-gray-500">Seja bem-vindo!</p>
                             </div>
                             <button
-                                onClick={handleLogout}
+                                onClick={sairToDo}
                                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gray-700 to-gray-600 text-gray-100 rounded-xl text-sm font-medium hover:from-gray-600 hover:to-gray-500 transition-all duration-200 shadow-lg hover:shadow-xl"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -524,7 +523,7 @@ const Dashboard = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-400">Total de Tarefas</p>
-                                <p className="text-3xl font-bold text-gray-100">{stats.total}</p>
+                                <p className="text-3xl font-bold text-gray-100">{numeros.total}</p>
                             </div>
                             <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-600 rounded-xl flex items-center justify-center">
                                 <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -538,7 +537,7 @@ const Dashboard = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-blue-400">A Fazer</p>
-                                <p className="text-3xl font-bold text-blue-300">{stats.todo}</p>
+                                <p className="text-3xl font-bold text-blue-300">{numeros.todo}</p>
                             </div>
                             <div className="w-12 h-12 bg-gradient-to-br from-blue-600/20 to-blue-700/20 rounded-xl flex items-center justify-center">
                                 <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -552,7 +551,7 @@ const Dashboard = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-lime-400">Em Progresso</p>
-                                <p className="text-3xl font-bold text-lime-300">{stats.doing}</p>
+                                <p className="text-3xl font-bold text-lime-300">{numeros.doing}</p>
                             </div>
                             <div className="w-12 h-12 bg-gradient-to-br from-lime-600/20 to-lime-700/20 rounded-xl flex items-center justify-center">
                                 <svg className="w-6 h-6 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -566,7 +565,7 @@ const Dashboard = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-emerald-400">Concluídas</p>
-                                <p className="text-3xl font-bold text-emerald-300">{stats.done}</p>
+                                <p className="text-3xl font-bold text-emerald-300">{numeros.done}</p>
                             </div>
                             <div className="w-12 h-12 bg-gradient-to-br from-emerald-600/20 to-emerald-700/20 rounded-xl flex items-center justify-center">
                                 <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -589,34 +588,34 @@ const Dashboard = () => {
                             <div className="flex-1"></div>
                         </div>
                         
-                        <form onSubmit={handleAddTodo} className="space-y-4">
+                        <form onSubmit={adicionarTarefa} className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <input
                                     type="text"
-                                    value={newTitle}
-                                    onChange={(e) => setNewTitle(e.target.value)}
+                                    value={tituloNovo}
+                                    onChange={(e) => setTituloNovo(e.target.value)}
                                     className="md:col-span-3 px-5 py-4 bg-gray-900/80 backdrop-blur-sm border border-gray-600 rounded-2xl focus:ring-2 focus:ring-lime-500 focus:border-lime-500 text-gray-100 placeholder-gray-400 shadow-sm transition-all duration-200"
                                     placeholder="Ex: Revisar relatório de vendas..."
                                     required
                                 />
                                 <button
                                     type="submit"
-                                    disabled={isAddingTodo || !newTitle.trim()}
+                                    disabled={adicionandoTarefa || !tituloNovo.trim()}
                                     className="flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-lime-500 to-lime-600 text-gray-900 rounded-2xl font-semibold hover:from-lime-400 hover:to-lime-500 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed disabled:text-gray-400 transition-all duration-200 shadow-lg hover:shadow-xl"
                                 >
-                                    {isAddingTodo ? (
+                                    {adicionandoTarefa ? (
                                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900"></div>
                                     ) : (
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
                                     )}
-                                    {isAddingTodo ? 'Adicionando...' : 'Criar Tarefa'}
+                                    {adicionandoTarefa ? 'Adicionando...' : 'Criar Tarefa'}
                                 </button>
                             </div>
                             <textarea
-                                value={newDescription}
-                                onChange={(e) => setNewDescription(e.target.value)}
+                                value={descricaoNova}
+                                onChange={(e) => setDescricaoNova(e.target.value)}
                                 className="w-full px-5 py-4 bg-gray-900/80 backdrop-blur-sm border border-gray-600 rounded-2xl focus:ring-2 focus:ring-lime-500 focus:border-lime-500 text-gray-100 placeholder-gray-400 shadow-sm transition-all duration-200 resize-none"
                                 rows={3}
                                 placeholder="Descrição detalhada da tarefa (opcional)..."
@@ -628,16 +627,16 @@ const Dashboard = () => {
                         <h3 className="text-lg font-semibold text-gray-100 mb-4">Filtrar Tarefas</h3>
                         <div className="flex flex-wrap gap-3">
                             {[
-                                { key: 'all', label: 'Todas', count: stats.total, color: 'gray' },
-                                { key: 'todo', label: 'A Fazer', count: stats.todo, color: 'blue' },
-                                { key: 'doing', label: 'Em Progresso', count: stats.doing, color: 'lime' },
-                                { key: 'done', label: 'Concluídas', count: stats.done, color: 'emerald' }
+                                { key: 'all', label: 'Todas', count: numeros.total, color: 'gray' },
+                                { key: 'todo', label: 'A Fazer', count: numeros.todo, color: 'blue' },
+                                { key: 'doing', label: 'Em Progresso', count: numeros.doing, color: 'lime' },
+                                { key: 'done', label: 'Concluídas', count: numeros.done, color: 'emerald' }
                             ].map(({ key, label, count, color }) => (
                                 <button
                                     key={key}
-                                    onClick={() => setFilter(key as any)}
+                                    onClick={() => setFiltro(key as any)}
                                     className={`px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-lg ${
-                                        filter === key
+                                        filtro === key
                                             ? color === 'gray' 
                                                 ? 'bg-gradient-to-r from-gray-600 to-gray-700 text-gray-100 shadow-lg'
                                                 : color === 'blue'
@@ -663,24 +662,24 @@ const Dashboard = () => {
                     <div className="p-8">
                         <DndContext 
                             collisionDetection={pointerWithin}
-                            onDragStart={handleDragStart}
-                            onDragEnd={handleDragEnd}
+                            onDragStart={iniciouArrasto}
+                            onDragEnd={finalizouArrasto}
                             sensors={sensors}
                         >
-                            <SortableContext items={filteredTodos.map(todo => todo.id)} strategy={verticalListSortingStrategy}>
+                            <SortableContext items={tarefasFiltradas.map(todo => todo.id)} strategy={verticalListSortingStrategy}>
                                 <div className="space-y-4">
-                                    {filteredTodos.length === 0 ? (
+                                    {tarefasFiltradas.length === 0 ? (
                                         <div className="text-center py-16">
                                             <div className="w-24 h-24 bg-gradient-to-br from-gray-700 to-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                                                {filter === 'all' ? (
+                                                {filtro === 'all' ? (
                                                     <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                                     </svg>
-                                                ) : filter === 'todo' ? (
+                                                ) : filtro === 'todo' ? (
                                                     <svg className="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                                     </svg>
-                                                ) : filter === 'doing' ? (
+                                                ) : filtro === 'doing' ? (
                                                     <svg className="w-10 h-10 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                     </svg>
@@ -691,32 +690,32 @@ const Dashboard = () => {
                                                 )}
                                             </div>
                                             <h3 className="text-xl font-semibold text-gray-300 mb-2">
-                                                {filter === 'all' ? 'Nenhuma tarefa encontrada' : 
-                                                 filter === 'todo' ? 'Nenhuma tarefa pendente' : 
-                                                 filter === 'doing' ? 'Nenhuma tarefa em progresso' : 
+                                                {filtro === 'all' ? 'Nenhuma tarefa encontrada' : 
+                                                 filtro === 'todo' ? 'Nenhuma tarefa pendente' : 
+                                                 filtro === 'doing' ? 'Nenhuma tarefa em progresso' : 
                                                  'Nenhuma tarefa concluída ainda'}
                                             </h3>
                                             <p className="text-gray-500">
-                                                {filter === 'all' ? 'Comece criando sua primeira tarefa!' : 
-                                                 `Você não tem tarefas ${filter === 'todo' ? 'pendentes' : filter === 'doing' ? 'em progresso' : 'concluídas'} no momento.`}
+                                                {filtro === 'all' ? 'Comece criando sua primeira tarefa!' : 
+                                                 `Você não tem tarefas ${filtro === 'todo' ? 'pendentes' : filtro === 'doing' ? 'em progresso' : 'concluídas'} no momento.`}
                                             </p>
                                         </div>
                                     ) : (
-                                        filteredTodos.map(todo => (
+                                        tarefasFiltradas.map(todo => (
                                             <TodoItem 
                                                 key={todo.id} 
                                                 todo={todo}
-                                                editingTodo={editingTodo}
-                                                editTitle={editTitle}
-                                                editDescription={editDescription}
-                                                setEditTitle={setEditTitle}
-                                                setEditDescription={setEditDescription}
-                                                handleSaveEdit={handleSaveEdit}
-                                                handleCancelEdit={handleCancelEdit}
-                                                handleStartEdit={handleStartEdit}
-                                                handleUpdateStatus={handleUpdateStatus}
-                                                handleDeleteTodo={handleDeleteTodo}
-                                                getStatusBadge={getStatusBadge}
+                                                editandoTarefa={editandoTarefa}
+                                                tituloEdicao={tituloEdicao}
+                                                descricaoEdicao={descricaoEdicao}
+                                                setTituloEdicao={setTituloEdicao}
+                                                setDescricaoEdicao={setDescricaoEdicao}
+                                                salvarEdicao={salvarEdicao}
+                                                cancelarEdicao={cancelarEdicao}
+                                                comecarEdicaoToDo={comecarEdicaoToDo}
+                                                mudaStatus={mudaStatus}
+                                                apagarTarefa={apagarTarefa}
+                                                statusCards={statusCards}
                                                 activeId={activeId}
                                             />
                                         ))
@@ -795,11 +794,11 @@ const Dashboard = () => {
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <h4 className="font-semibold text-gray-100 text-sm leading-tight">
-                                                    {filteredTodos.find(t => t.id === activeId)?.title}
+                                                    {tarefasFiltradas.find(t => t.id === activeId)?.title}
                                                 </h4>
-                                                {filteredTodos.find(t => t.id === activeId)?.description && (
+                                                {tarefasFiltradas.find(t => t.id === activeId)?.description && (
                                                     <p className="text-xs text-gray-300 mt-1 line-clamp-1">
-                                                        {filteredTodos.find(t => t.id === activeId)?.description}
+                                                        {tarefasFiltradas.find(t => t.id === activeId)?.description}
                                                     </p>
                                                 )}
                                                 <div className="flex items-center gap-2 mt-2">
