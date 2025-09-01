@@ -7,7 +7,8 @@ export interface User {
 export interface Todo {
   id: string;
   title: string;
-  completed: boolean;
+  description?: string;                  
+  status: 'todo' | 'doing' | 'done'; 
   userId: string;
   createdAt: Date;
   updatedAt: Date;
