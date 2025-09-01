@@ -5,7 +5,11 @@ import {
   DndContext, 
   useDroppable,
   DragOverlay,
-  pointerWithin
+  pointerWithin,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors
 } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -232,6 +236,22 @@ const Dashboard = () => {
   const [editDescription, setEditDescription] = useState('');
   const [activeId, setActiveId] = useState<string | null>(null);
 
+  // Configurar sensores para melhor controle do drag
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 3,
+    },
+  });
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 100,
+      tolerance: 5,
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
+
   useEffect(() => {
     if (!user) return;
 
@@ -380,16 +400,16 @@ const Dashboard = () => {
     
     const colorClasses = {
       blue: {
-        normal: 'border-blue-300 bg-blue-50 text-blue-700',
-        hover: 'border-blue-500 bg-blue-100 shadow-lg scale-105'
+        normal: 'border-blue-300/60 bg-gradient-to-br from-blue-50 to-blue-100/50 text-blue-700',
+        hover: 'border-blue-500 bg-gradient-to-br from-blue-100 to-blue-200 shadow-2xl scale-[1.02] ring-4 ring-blue-200/50'
       },
       yellow: {
-        normal: 'border-yellow-300 bg-yellow-50 text-yellow-700',
-        hover: 'border-yellow-500 bg-yellow-100 shadow-lg scale-105'
+        normal: 'border-amber-300/60 bg-gradient-to-br from-amber-50 to-amber-100/50 text-amber-700',
+        hover: 'border-amber-500 bg-gradient-to-br from-amber-100 to-amber-200 shadow-2xl scale-[1.02] ring-4 ring-amber-200/50'
       },
       green: {
-        normal: 'border-green-300 bg-green-50 text-green-700',
-        hover: 'border-green-500 bg-green-100 shadow-lg scale-105'
+        normal: 'border-emerald-300/60 bg-gradient-to-br from-emerald-50 to-emerald-100/50 text-emerald-700',
+        hover: 'border-emerald-500 bg-gradient-to-br from-emerald-100 to-emerald-200 shadow-2xl scale-[1.02] ring-4 ring-emerald-200/50'
       }
     };
 
@@ -398,43 +418,107 @@ const Dashboard = () => {
     return (
       <div
         ref={setNodeRef}
-        className={`p-6 rounded-xl border-2 border-dashed transition-all duration-200 min-h-[80px] flex flex-col justify-center ${
+        className={`p-8 rounded-3xl border-3 border-dashed transition-all duration-300 min-h-[120px] flex flex-col justify-center items-center relative overflow-hidden ${
           isOver ? colors.hover : colors.normal
-        }`}
+        } hover:shadow-xl hover:scale-[1.01] cursor-pointer group`}
       >
-        <div className={`text-center font-semibold text-lg ${isOver ? 'animate-bounce' : ''}`}>
-          {label}
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,currentColor_1px,transparent_1px)] bg-[length:20px_20px]"></div>
         </div>
-        <div className="text-xs text-center mt-2 opacity-80">
-          {isOver ? '🎯 Solte aqui!' : '👆 Arraste tarefas para cá'}
+        
+        {/* Content */}
+        <div className="relative z-10 text-center">
+          <div className={`text-2xl font-bold mb-2 transition-all duration-300 ${
+            isOver ? 'animate-pulse scale-110' : 'group-hover:scale-105'
+          }`}>
+            {label}
+          </div>
+          
+          <div className={`text-sm opacity-80 transition-all duration-300 ${
+            isOver ? 'font-semibold text-base' : ''
+          }`}>
+            {isOver ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-2 h-2 bg-current rounded-full animate-ping"></div>
+                <span>Solte a tarefa aqui!</span>
+                <div className="w-2 h-2 bg-current rounded-full animate-ping"></div>
+              </div>
+            ) : (
+              'Arraste tarefas para esta zona'
+            )}
+          </div>
         </div>
+
+        {/* Animated Border Effect */}
         {isOver && (
-          <div className="mt-2 mx-auto w-8 h-1 bg-current rounded-full animate-pulse"></div>
+          <div className="absolute inset-0 rounded-3xl">
+            <div className="absolute inset-0 rounded-3xl border-2 border-current animate-ping opacity-60"></div>
+            <div className="absolute inset-2 rounded-3xl border border-current animate-pulse opacity-40"></div>
+          </div>
         )}
+
+        {/* Drop Target Indicator */}
+        <div className={`absolute bottom-4 left-1/2 transform -translate-x-1/2 transition-all duration-300 ${
+          isOver ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+        }`}>
+          <div className="flex space-x-1">
+            <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
+        </div>
       </div>
     );
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex justify-center items-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex justify-center items-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-xl animate-pulse">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600 font-medium">Carregando suas tarefas...</p>
+          <p className="text-slate-400 text-sm">Modo automático ativo</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <h1 className="text-xl font-semibold text-gray-900">📝 Todo App</h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Header com identidade Sootz */}
+      <header className="bg-white/95 backdrop-blur-sm border-b border-slate-200/60 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-5">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Olá, {user?.email}</span>
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+                  TodoList Sootz
+                </h1>
+              </div>
+            </div>
+            <div className="flex items-center space-x-6">
+              <div className="text-right">
+                <p className="text-sm text-slate-600">Olá, <span className="font-semibold">{user?.email},</span></p>
+                <p className="text-xs text-slate-400">Seja bem-vindo!</p>
+              </div>
               <button
                 onClick={handleLogout}
-                className="bg-red-600 text-white px-3 py-2 rounded-md text-sm hover:bg-red-700 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-xl text-sm font-medium hover:from-slate-700 hover:to-slate-800 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
                 Sair
               </button>
             </div>
@@ -442,189 +526,315 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Minhas Tarefas</h2>
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        {/* Stats Dashboard - Estilo Sootz */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-600">Total de Tarefas</p>
+                <p className="text-3xl font-bold text-slate-800">{stats.total}</p>
+              </div>
+              <div className="w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              </div>
+            </div>
+          </div>
           
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-slate-600">{stats.total}</div>
-              <div className="text-sm text-slate-800">Total</div>
-            </div>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.todo}</div>
-              <div className="text-sm text-blue-800">A Fazer</div>
-            </div>
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-yellow-600">{stats.doing}</div>
-              <div className="text-sm text-yellow-800">Em Progresso</div>
-            </div>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.done}</div>
-              <div className="text-sm text-green-800">Concluídas</div>
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-blue-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-blue-600">A Fazer</p>
+                <p className="text-3xl font-bold text-blue-700">{stats.todo}</p>
+              </div>
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
             </div>
           </div>
 
-          {/* Add Todo Form */}
-          <form onSubmit={handleAddTodo} className="mb-6 bg-gray-50 p-4 rounded-lg border">
-            <h3 className="text-lg font-medium text-gray-900 mb-3">✨ Adicionar Nova Tarefa</h3>
-            <div className="space-y-3">
-              <input
-                type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                placeholder="Título da tarefa..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                disabled={isAddingTodo}
-              />
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-amber-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-amber-600">Em Progresso</p>
+                <p className="text-3xl font-bold text-amber-700">{stats.doing}</p>
+              </div>
+              <div className="w-12 h-12 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-emerald-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-emerald-600">Concluídas</p>
+                <p className="text-3xl font-bold text-emerald-700">{stats.done}</p>
+              </div>
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content Card */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-3xl border border-slate-200/60 shadow-2xl overflow-hidden">
+          {/* Add Todo Form - Redesenhado */}
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200/60 p-8">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-slate-800">Adicionar Nova Tarefa</h2>
+              <div className="flex-1"></div>
+              <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full">
+                Automação Ativa
+              </span>
+            </div>
+            
+            <form onSubmit={handleAddTodo} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <input
+                  type="text"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  className="md:col-span-3 px-5 py-4 bg-white/80 backdrop-blur-sm border border-slate-300/60 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-800 placeholder-slate-400 shadow-sm transition-all duration-200"
+                  placeholder="Ex: Revisar relatório de vendas..."
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={isAddingTodo || !newTitle.trim()}
+                  className="flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:from-slate-400 disabled:to-slate-500 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  {isAddingTodo ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  )}
+                  {isAddingTodo ? 'Adicionando...' : 'Criar Tarefa'}
+                </button>
+              </div>
               <textarea
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
-                placeholder="Descrição (opcional)..."
-                rows={2}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                disabled={isAddingTodo}
+                className="w-full px-5 py-4 bg-white/80 backdrop-blur-sm border border-slate-300/60 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-800 placeholder-slate-400 shadow-sm transition-all duration-200 resize-none"
+                rows={3}
+                placeholder="Descrição detalhada da tarefa (opcional)..."
               />
-              <button
-                type="submit"
-                disabled={isAddingTodo || !newTitle.trim()}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isAddingTodo ? 'Adicionando...' : '➕ Adicionar Tarefa'}
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
 
-          {/* Filter Buttons */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                filter === 'all' 
-                  ? 'bg-indigo-600 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              🔍 Todas ({stats.total})
-            </button>
-            <button
-              onClick={() => setFilter('todo')}
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                filter === 'todo' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-              }`}
-            >
-              📋 A Fazer ({stats.todo})
-            </button>
-            <button
-              onClick={() => setFilter('doing')}
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                filter === 'doing' 
-                  ? 'bg-yellow-600 text-white' 
-                  : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
-              }`}
-            >
-              ⏳ Em Progresso ({stats.doing})
-            </button>
-            <button
-              onClick={() => setFilter('done')}
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                filter === 'done' 
-                  ? 'bg-green-600 text-white' 
-                  : 'bg-green-100 text-green-700 hover:bg-green-200'
-              }`}
-            >
-              ✅ Concluídas ({stats.done})
-            </button>
+          {/* Filter Buttons - Redesenhado */}
+          <div className="p-8 border-b border-slate-200/60">
+            <h3 className="text-lg font-semibold text-slate-800 mb-4">Filtrar Tarefas</h3>
+            <div className="flex flex-wrap gap-3">
+              {[
+                { key: 'all', label: 'Todas', count: stats.total, color: 'slate' },
+                { key: 'todo', label: 'A Fazer', count: stats.todo, color: 'blue' },
+                { key: 'doing', label: 'Em Progresso', count: stats.doing, color: 'amber' },
+                { key: 'done', label: 'Concluídas', count: stats.done, color: 'emerald' }
+              ].map(({ key, label, count, color }) => (
+                <button
+                  key={key}
+                  onClick={() => setFilter(key as any)}
+                  className={`px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-lg ${
+                    filter === key
+                      ? color === 'slate' 
+                        ? 'bg-gradient-to-r from-slate-500 to-slate-600 text-white shadow-lg'
+                        : color === 'blue'
+                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
+                        : color === 'amber'
+                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg'
+                        : 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg'
+                      : color === 'slate'
+                      ? 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200/60'
+                      : color === 'blue'
+                      ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200/60'
+                      : color === 'amber'
+                      ? 'bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200/60'
+                      : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200/60'
+                  }`}
+                >
+                  {label} ({count})
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Todo List */}
-          <DndContext 
-            collisionDetection={pointerWithin}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext items={filteredTodos.map(todo => todo.id)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-3">
-                {filteredTodos.length === 0 ? (
-                  <div className="text-center py-12 text-gray-500">
-                    {filter === 'all' ? (
-                      <div>
-                        <div className="text-4xl mb-2">📝</div>
-                        <p className="text-lg">Nenhuma tarefa encontrada.</p>
-                        <p className="text-sm">Comece criando sua primeira tarefa!</p>
+          <div className="p-8">
+            <DndContext 
+              collisionDetection={pointerWithin}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              sensors={sensors}
+            >
+              <SortableContext items={filteredTodos.map(todo => todo.id)} strategy={verticalListSortingStrategy}>
+                <div className="space-y-4">
+                  {filteredTodos.length === 0 ? (
+                    <div className="text-center py-16">
+                      <div className="w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                        {filter === 'all' ? (
+                          <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                          </svg>
+                        ) : filter === 'todo' ? (
+                          <svg className="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                        ) : filter === 'doing' ? (
+                          <svg className="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        ) : (
+                          <svg className="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        )}
                       </div>
-                    ) : (
-                      <div>
-                        <div className="text-4xl mb-2">
-                          {filter === 'todo' ? '📋' : filter === 'doing' ? '⏳' : '🎉'}
-                        </div>
-                        <p className="text-lg">
-                          {filter === 'todo' ? 'Nenhuma tarefa pendente' : 
-                           filter === 'doing' ? 'Nenhuma tarefa em progresso' : 
-                           'Nenhuma tarefa concluída ainda'}
-                        </p>
-                      </div>
-                    )}
+                      <h3 className="text-xl font-semibold text-slate-700 mb-2">
+                        {filter === 'all' ? 'Nenhuma tarefa encontrada' : 
+                         filter === 'todo' ? 'Nenhuma tarefa pendente' : 
+                         filter === 'doing' ? 'Nenhuma tarefa em progresso' : 
+                         'Nenhuma tarefa concluída ainda'}
+                      </h3>
+                      <p className="text-slate-500">
+                        {filter === 'all' ? 'Comece criando sua primeira tarefa!' : 
+                         `Você não tem tarefas ${filter === 'todo' ? 'pendentes' : filter === 'doing' ? 'em progresso' : 'concluídas'} no momento.`}
+                      </p>
+                    </div>
+                  ) : (
+                    filteredTodos.map(todo => (
+                      <TodoItem 
+                        key={todo.id} 
+                        todo={todo}
+                        editingTodo={editingTodo}
+                        editTitle={editTitle}
+                        editDescription={editDescription}
+                        setEditTitle={setEditTitle}
+                        setEditDescription={setEditDescription}
+                        handleSaveEdit={handleSaveEdit}
+                        handleCancelEdit={handleCancelEdit}
+                        handleStartEdit={handleStartEdit}
+                        handleUpdateStatus={handleUpdateStatus}
+                        handleDeleteTodo={handleDeleteTodo}
+                        getStatusBadge={getStatusBadge}
+                        activeId={activeId}
+                      />
+                    ))
+                  )}
+                </div>
+              </SortableContext>
+
+              {/* Drag Zones - Redesenhado */}
+              <div className="mt-16 p-10 bg-gradient-to-br from-slate-50/80 to-blue-50/80 rounded-3xl border border-slate-200/60 backdrop-blur-sm">
+                <div className="text-center mb-10">
+                  <div className="inline-flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+                      </svg>
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-800">Zonas de Drop Inteligentes</h3>
                   </div>
-                ) : (
-                  filteredTodos.map(todo => (
-                    <TodoItem 
-                      key={todo.id} 
-                      todo={todo}
-                      editingTodo={editingTodo}
-                      editTitle={editTitle}
-                      editDescription={editDescription}
-                      setEditTitle={setEditTitle}
-                      setEditDescription={setEditDescription}
-                      handleSaveEdit={handleSaveEdit}
-                      handleCancelEdit={handleCancelEdit}
-                      handleStartEdit={handleStartEdit}
-                      handleUpdateStatus={handleUpdateStatus}
-                      handleDeleteTodo={handleDeleteTodo}
-                      getStatusBadge={getStatusBadge}
-                      activeId={activeId}
-                    />
-                  ))
-                )}
-              </div>
-            </SortableContext>
-
-            {/* Drag Zones - Areas para soltar os todos */}
-            <div className="mt-8 p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">
-                🎯 Zonas de Drop - Arraste as tarefas aqui para mudar o status
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <DropZone id="todo" label="📋 A Fazer" color="blue" />
-                <DropZone id="doing" label="⏳ Em Progresso" color="yellow" />
-                <DropZone id="done" label="✅ Concluído" color="green" />
-              </div>
-            </div>
-
-            <DragOverlay>
-              {activeId ? (
-                <div className="bg-white border-2 border-indigo-500 rounded-lg p-3 shadow-2xl opacity-95 transform rotate-2 max-w-xs">
-                  <div className="flex items-start gap-2">
-                    <div className="text-indigo-600 text-sm">📌</div>
-                    <div className="min-w-0 flex-1">
-                      <h4 className="font-semibold text-gray-900 text-sm truncate">
-                        {filteredTodos.find(t => t.id === activeId)?.title}
-                      </h4>
-                      {filteredTodos.find(t => t.id === activeId)?.description && (
-                        <p className="text-xs text-gray-600 mt-1 line-clamp-2">
-                          {filteredTodos.find(t => t.id === activeId)?.description}
-                        </p>
-                      )}
-                      <p className="text-xs text-indigo-600 mt-1 font-medium">Arrastando...</p>
+                  <p className="text-slate-600 text-lg">Arraste as tarefas para as zonas abaixo para alterar o status automaticamente</p>
+                  <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    Modo Automático Ativo
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <DropZone id="todo" label="📋 A Fazer" color="blue" />
+                  <DropZone id="doing" label="⏳ Em Progresso" color="yellow" />
+                  <DropZone id="done" label="✅ Concluído" color="green" />
+                </div>
+                
+                {/* Instructions */}
+                <div className="mt-8 text-center">
+                  <div className="inline-flex items-center gap-6 text-sm text-slate-500">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+                      </svg>
+                      <span>Clique e segure</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                      <span>Arraste para a zona</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Solte para atualizar</span>
                     </div>
                   </div>
                 </div>
-              ) : null}
-            </DragOverlay>
-          </DndContext>
+              </div>
+
+              <DragOverlay
+                dropAnimation={{
+                  duration: 200,
+                  easing: 'ease-out',
+                }}
+                style={{
+                  transformOrigin: '0 0',
+                }}
+              >
+                {activeId ? (
+                  <div 
+                    className="bg-white/95 backdrop-blur-sm border-2 border-blue-400 rounded-2xl p-4 shadow-2xl max-w-sm"
+                    style={{
+                      transform: 'rotate(2deg)',
+                      cursor: 'grabbing',
+                    }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+                        </svg>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-semibold text-slate-900 text-sm leading-tight">
+                          {filteredTodos.find(t => t.id === activeId)?.title}
+                        </h4>
+                        {filteredTodos.find(t => t.id === activeId)?.description && (
+                          <p className="text-xs text-slate-600 mt-1 line-clamp-1">
+                            {filteredTodos.find(t => t.id === activeId)?.description}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2 mt-2">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                          <p className="text-xs text-blue-600 font-medium">Arrastando...</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Subtle glow effect */}
+                    <div className="absolute inset-0 rounded-2xl bg-blue-400/10 blur-md -z-10"></div>
+                  </div>
+                ) : null}
+              </DragOverlay>
+            </DndContext>
+          </div>
         </div>
       </main>
     </div>
