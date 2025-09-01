@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.12",
+    "@types/react-router-dom": "^5.3.3",
     "autoprefixer": "^10.4.21",
     "firebase": "^12.2.1",
     "postcss": "^8.5.6",
