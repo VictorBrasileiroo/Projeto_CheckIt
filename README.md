@@ -104,11 +104,10 @@ src/
 │   │   └── AuthSecurity.tsx
 │   ├── Layout/
 │   │   └── Dashboard.tsx
-│   └── Kanban/
-│       ├── KanbanBoard.tsx
-│       ├── KanbanColumn.tsx
-│       ├── KanbanCard.tsx
-│       └── AddCardForm.tsx
+│   └── TodoList/
+│       ├── TodoForm.tsx
+│       ├── TodoItem.tsx
+│       └── TodoList.tsx
 ├── contexts/
 │   └── AuthContext.tsx
 ├── services/
