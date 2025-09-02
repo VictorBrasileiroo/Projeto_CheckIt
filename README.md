@@ -182,7 +182,7 @@ A aplicação está em produção no Firebase Hosting, oferecendo:
 - ✅ Deploy contínuo
 - ✅ Domínio personalizado disponível
 
-**URL da Aplicação**: [https://todolist-sootz.web.app](https://todolist-sootz.web.app)
+**URL da Aplicação**: [https://todolistsootz.web.app/](https://todolistsootz.web.app/)
 
 ### 📦 Como Fazer Deploy
 
@@ -320,8 +320,8 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para de
 
 **Victor Brasileiro**
 - GitHub: [@VictorBrasileiroo](https://github.com/VictorBrasileiroo)
-- LinkedIn: [Victor Brasileiro](https://linkedin.com/in/victorbrasileiro)
-- Portfolio: [Acesse a aplicação](https://todolist-sootz.web.app)
+- LinkedIn: [Victor Brasileiro](https://linkedin.com/in/victorbrasileiroo)
+- Portfolio: [Acesse a aplicação](https://portifoliovictorbrasileiroo.netlify.app/)
 
 ## 🛠️ Comandos Úteis
 
@@ -352,4 +352,4 @@ npm update             # Atualizar dependências
 
 ⭐ Se este projeto te ajudou, deixe uma estrela no repositório!
 
-**🚀 Acesse a aplicação**: [https://todolist-sootz.web.app](https://todolist-sootz.web.app)
+**🚀 Acesse a aplicação**: [https://todolistsootz.web.app/](https://todolistsootz.web.app/)
