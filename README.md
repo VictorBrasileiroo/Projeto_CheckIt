@@ -102,8 +102,13 @@ src/
 │   │   ├── Login.tsx
 │   │   ├── Register.tsx
 │   │   └── AuthSecurity.tsx
-│   └── Layout/
-│       └── Dashboard.tsx
+│   ├── Layout/
+│   │   └── Dashboard.tsx
+│   └── Kanban/
+│       ├── KanbanBoard.tsx
+│       ├── KanbanColumn.tsx
+│       ├── KanbanCard.tsx
+│       └── AddCardForm.tsx
 ├── contexts/
 │   └── AuthContext.tsx
 ├── services/
