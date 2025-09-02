@@ -146,7 +146,7 @@ const LandingPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <span className="text-gray-400 font-medium">TodoList Sootz</span>
+            <span className="text-gray-400 font-medium"> TodoList Sootz - Feito para fins Educacionais e Técnicos</span>
           </div>
         </div>
       </footer>

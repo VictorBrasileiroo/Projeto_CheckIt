@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { DndContext, useDroppable,DragOverlay,pointerWithin,MouseSensor,TouchSensor.useSensor,useSensors } from '@dnd-kit/core';
+import { DndContext, useDroppable,DragOverlay,pointerWithin,MouseSensor,TouchSensor,useSensor,useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
