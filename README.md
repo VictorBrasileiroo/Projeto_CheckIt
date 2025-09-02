@@ -6,19 +6,19 @@ Uma aplicação web moderna de gerenciamento de tarefas com autenticação, drag
 
 🔗 **Aplicação em Produção**: [https://todolistsootz.web.app/](https://todolistsootz.web.app/)
 
-> Deploy automatizado via Firebase Hosting com CI/CD integrado
+> Deploy automatizado via Firebase Hosting com Github integrado
 
 ## 🚀 Tecnologias Utilizadas
 
 - **Frontend**: React 19 + TypeScript
 - **Estilização**: Tailwind CSS + Responsive Design
 - **Autenticação**: Firebase Authentication
-- **Banco de Dados**: Cloud Firestore (NoSQL)
-- **Drag & Drop**: @dnd-kit (Biblioteca moderna)
+- **Banco de Dados**: Cloud Firestore
+- **Drag & Drop**: @dnd-kit
 - **Roteamento**: React Router DOM v6
-- **Build**: Vite (Bundler ultrarrápido)
+- **Build**: Vite 
 - **Deploy**: Firebase Hosting + CDN Global
-- **CI/CD**: GitHub Actions (Automação)
+- **CI/CD**: GitHub Actions
 
 ## ✨ Funcionalidades
 
@@ -103,11 +103,8 @@ src/
 │   │   ├── Register.tsx
 │   │   └── AuthSecurity.tsx
 │   ├── Layout/
-│   │   └── Dashboard.tsx
-│   └── TodoList/
-│       ├── TodoForm.tsx
-│       ├── TodoItem.tsx
-│       └── TodoList.tsx
+│   │   ├── Dashboard.tsx
+│   │   └── LandingPage.tsx
 ├── contexts/
 │   └── AuthContext.tsx
 ├── services/
@@ -116,56 +113,16 @@ src/
 ├── types/
 │   └── Index.tsx
 └── App.tsx
+
 ```
 
 ## 🔥 Recursos Avançados
 
-### Drag & Drop Inteligente
-- Arrastar tarefas entre zonas de status
-- Feedback visual durante o arraste
-- Animações suaves
-
-### Filtros Dinâmicos
-- Visualização por status
-- Contadores em tempo real
-- Interface intuitiva
-
-### Edição Inline
-- Editar tarefas sem sair da lista
-- Salvar com Enter ou Ctrl+Enter
-- Cancelar com Esc
-
-### Sincronização em Tempo Real
-- Mudanças instantâneas entre dispositivos
-- Listener do Firestore
-- Estado sempre atualizado
-
-### Responsividade Mobile
-- Layout otimizado para dispositivos móveis
-- Touch gestures para drag & drop
-- Interface adaptativa
-
-## 📊 Performance e Otimizações
-
-### 🚀 Otimizações Implementadas
-- **Code Splitting**: Carregamento sob demanda
-- **Tree Shaking**: Remoção de código não utilizado  
-- **Minificação**: CSS e JavaScript otimizados
-- **Gzip/Brotli**: Compressão de assets
-- **CDN**: Firebase CDN global
-- **Lazy Loading**: Componentes carregados quando necessário
-
-### 📈 Métricas de Performance
-- **First Contentful Paint**: < 1.5s
-- **Largest Contentful Paint**: < 2.5s
-- **Time to Interactive**: < 3.5s
-- **Cumulative Layout Shift**: < 0.1
-
-### 🛡️ Segurança
-- **HTTPS**: Certificado SSL automático
-- **Firestore Rules**: Acesso restrito por usuário
-- **Authentication**: Firebase Auth seguro
-- **CORS**: Configuração adequada de origem
+- **Drag & Drop Inteligente** – Movimente itens com facilidade e precisão.  
+- **Filtros Dinâmicos** – Encontre rapidamente o que precisa com filtros personalizáveis.  
+- **Edição Inline** – Edite conteúdos diretamente sem abrir novas janelas.  
+- **Sincronização em Tempo Real** – Alterações instantaneamente refletidas para todos os usuários.  
+- **Responsividade Mobile** – Experiência otimizada em qualquer dispositivo.  
 
 ## 🎯 Como Usar
 
@@ -266,46 +223,6 @@ firebase hosting:sites:list
     ]
   }
 }
-```
-
-### 🚀 Deploy Alternativo - Outras Plataformas
-
-#### Vercel
-```bash
-npm i -g vercel
-vercel --prod
-```
-
-#### Netlify
-```bash
-npm run build
-# Faça upload da pasta 'dist' no Netlify
-```
-
-### 🔄 CI/CD com GitHub Actions
-
-Crie `.github/workflows/deploy.yml`:
-```yaml
-name: Deploy to Firebase Hosting
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-      - run: npm install
-      - run: npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          projectId: your-project-id
 ```
 
 ## 🤝 Contribuição
