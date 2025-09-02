@@ -152,7 +152,7 @@ const TodoItem = ({
                                         <path d="M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM7 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM7 14a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 14a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
                                     </svg>
                                 </div>
-                                <div className="flex-1 min-w-0">
+                                <div className="flex-1 min-w-0 pb-3">
                                     <h4 className="font-semibold text-gray-100 leading-tight text-sm sm:text-base break-words">{todo.title}</h4>
                                     {todo.description && (
                                         <p className="text-gray-300 text-xs sm:text-sm mt-1 leading-relaxed break-words">{todo.description}</p>
