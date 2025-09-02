@@ -81,7 +81,6 @@ export const todoService = {
     const todoRef = doc(db, 'todos', id);
     await updateDoc(todoRef, {
       status: newStatus
-      // Não atualiza updatedAt para mudanças de status
     });
   },
 

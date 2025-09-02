@@ -724,7 +724,7 @@ const Dashboard = () => {
                                 </div>
                             </SortableContext>
 
-                            <div className="mt-16 p-10 bg-gradient-to-br from-gray-900/50 to-gray-800/50 rounded-3xl border border-gray-700/60 backdrop-blur-sm">
+                            <div className="mt-8 p-10 bg-gradient-to-br from-gray-900/50 to-gray-800/50 rounded-3xl border border-gray-700/60 backdrop-blur-sm">
                                 <div className="text-center mb-6 sm:mb-8 lg:mb-10">
                                     <div className="inline-flex items-center gap-3 mb-4">
                                         <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-lime-500 to-lime-600 rounded-lg flex items-center justify-center">
