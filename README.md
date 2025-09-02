@@ -116,6 +116,25 @@ src/
 
 ```
 
+## 🧪 Testes
+
+Este projeto utiliza **Vitest** como framework de testes, oferecendo uma experiência rápida e moderna para testes unitários e de integração.
+
+### Cobertura Atual
+
+- ✅ **TodoService** - 11 testes unitários
+  - Criação de tarefas (`add`)
+  - Atualização de conteúdo (`updateContent`) 
+  - Mudança de status (`updateStatus`)
+  - Exclusão (`delete`)
+  - Movimentação entre colunas (`moveToStatus`)
+  - Listener em tempo real (`subscribe`)
+
+### Como Executar os Testes
+```bash
+npm run test:run
+```
+
 ## 🔥 Recursos Avançados
 
 - **Drag & Drop Inteligente** – Movimente itens com facilidade e precisão.  
