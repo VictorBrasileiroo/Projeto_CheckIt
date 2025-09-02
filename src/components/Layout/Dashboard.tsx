@@ -74,14 +74,14 @@ const TodoItem = ({
         <div
             ref={setNodeRef}
             style={style}
-            className={`bg-gray-800/80 backdrop-blur-sm border rounded-lg p-4 transition-all duration-200 ${
+            className={`bg-gray-800/80 backdrop-blur-sm border rounded-lg p-3 sm:p-4 transition-all duration-200 ${
                 isDragging || isActive 
                     ? 'opacity-60 shadow-2xl scale-105 border-lime-400 bg-gray-700/50 ring-2 ring-lime-400/20' 
                     : 'hover:shadow-lg border-gray-700 hover:border-gray-600 hover:bg-gray-800'
             }`}
         >
-            <div className="flex items-start justify-between mb-2">
-                <div className="flex-1">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 gap-3 sm:gap-0">
+                <div className="flex-1 min-w-0">
                     {isEditing ? (
                         <div className="space-y-2">
                             <input
@@ -149,68 +149,70 @@ const TodoItem = ({
                         </div>
                     ) : (
                         <>
-                            <div className="flex items-start gap-3 mb-1">
+                            <div className="flex items-start gap-2 sm:gap-3 mb-1">
                                 <div
                                     {...attributes}
                                     {...listeners}
-                                    className="cursor-grab active:cursor-grabbing text-gray-500 hover:text-lime-400 p-2 -m-2 rounded-md hover:bg-gray-700 transition-all duration-200 group"
+                                    className="cursor-grab active:cursor-grabbing text-gray-500 hover:text-lime-400 p-1 sm:p-2 -m-1 sm:-m-2 rounded-md hover:bg-gray-700 transition-all duration-200 group touch-manipulation"
                                     style={{ touchAction: 'none' }}
                                     title="Arrastar tarefa"
                                 >
-                                    <svg className="w-4 h-4 transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM7 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM7 14a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 14a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
                                     </svg>
                                 </div>
-                                <div className="flex-1">
-                                    <h4 className="font-semibold text-gray-100 leading-tight">{todo.title}</h4>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="font-semibold text-gray-100 leading-tight text-sm sm:text-base break-words">{todo.title}</h4>
                                     {todo.description && (
-                                        <p className="text-gray-300 text-sm mt-1 leading-relaxed">{todo.description}</p>
+                                        <p className="text-gray-300 text-xs sm:text-sm mt-1 leading-relaxed break-words">{todo.description}</p>
                                     )}
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 text-xs text-gray-400 ml-8">
-                                <span>📅 {todo.createdAt?.toLocaleDateString('pt-BR')}</span>
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-gray-400 ml-5 sm:ml-8">
+                                <span className="whitespace-nowrap">📅 {todo.createdAt?.toLocaleDateString('pt-BR')}</span>
                                 {todo.updatedAt && todo.updatedAt.getTime() !== todo.createdAt?.getTime() && (
-                                    <span>✏️ Editado: {todo.updatedAt.toLocaleDateString('pt-BR')}</span>
+                                    <span className="whitespace-nowrap">✏️ Editado: {todo.updatedAt.toLocaleDateString('pt-BR')}</span>
                                 )}
-                                {statusCards(todo.status)}
+                                <div className="flex-shrink-0">
+                                    {statusCards(todo.status)}
+                                </div>
                             </div>
                         </>
                     )}
                 </div>
                 {!isEditing && (
-                    <div className="ml-4 flex flex-col gap-3">
+                    <div className="flex sm:flex-col gap-2 sm:gap-3 sm:ml-4 w-full sm:w-auto">
                         <select
                             value={todo.status}
                             onChange={(e) => mudaStatus(todo.id, e.target.value as 'todo' | 'doing' | 'done')}
-                            className="text-sm bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lime-500 text-gray-100 shadow-sm hover:shadow-md transition-shadow min-w-[140px]"
+                            className="text-xs sm:text-sm bg-gray-900 border border-gray-600 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 focus:outline-none focus:ring-2 focus:ring-lime-500 text-gray-100 shadow-sm hover:shadow-md transition-shadow flex-1 sm:flex-none sm:min-w-[140px]"
                         >
                             <option value="todo">📋 A Fazer</option>
                             <option value="doing">⏳ Em Progresso</option>
                             <option value="done">✅ Concluído</option>
                         </select>
                         
-                        <div className="flex gap-2">
+                        <div className="flex gap-1 sm:gap-2">
                             <button
                                 onClick={() => comecarEdicaoToDo(todo)}
-                                className="flex items-center gap-2 px-3 py-2 bg-lime-500/20 text-lime-400 rounded-lg text-sm font-medium hover:bg-lime-500/30 hover:text-lime-300 transition-all shadow-sm hover:shadow-md border border-lime-500/30"
+                                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-lime-500/20 text-lime-400 rounded-lg text-xs sm:text-sm font-medium hover:bg-lime-500/30 hover:text-lime-300 transition-all shadow-sm hover:shadow-md border border-lime-500/30 touch-manipulation"
                                 title="Editar tarefa"
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
-                                Editar
+                                <span className="hidden sm:inline">Editar</span>
                             </button>
                             
                             <button
                                 onClick={() => apagarTarefa(todo.id)}
-                                className="flex items-center gap-2 px-3 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/30 hover:text-red-300 transition-all shadow-sm hover:shadow-md border border-red-500/30"
+                                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-red-500/20 text-red-400 rounded-lg text-xs sm:text-sm font-medium hover:bg-red-500/30 hover:text-red-300 transition-all shadow-sm hover:shadow-md border border-red-500/30 touch-manipulation"
                                 title="Excluir tarefa"
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
-                                Excluir
+                                <span className="hidden sm:inline">Excluir</span>
                             </button>
                         </div>
                     </div>
@@ -237,14 +239,14 @@ const Dashboard = () => {
 
     const mouseSensor = useSensor(MouseSensor, {
         activationConstraint: {
-            distance: 3,
+            distance: 8, 
         },
     });
 
     const touchSensor = useSensor(TouchSensor, {
         activationConstraint: {
-            delay: 100,
-            tolerance: 5,
+            delay: 150, 
+            tolerance: 8, 
         },
     });
 
@@ -414,32 +416,36 @@ const Dashboard = () => {
         return (
             <div
                 ref={setNodeRef}
-                className={`p-8 rounded-3xl border-3 border-dashed transition-all duration-300 min-h-[120px] flex flex-col justify-center items-center relative overflow-hidden ${
+                className={`p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl border-2 sm:border-3 border-dashed transition-all duration-300 min-h-[100px] sm:min-h-[120px] flex flex-col justify-center items-center relative overflow-hidden ${
                     isOver ? colors.hover : colors.normal
-                } hover:shadow-xl hover:scale-[1.01] cursor-pointer group`}
+                } hover:shadow-xl hover:scale-[1.01] cursor-pointer group touch-manipulation`}
             >
                 <div className="absolute inset-0 opacity-10">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,currentColor_1px,transparent_1px)] bg-[length:20px_20px]"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,currentColor_1px,transparent_1px)] bg-[length:15px_15px] sm:bg-[length:20px_20px]"></div>
                 </div>
                 
-                <div className="relative z-10 text-center">
-                    <div className={`text-2xl font-bold mb-2 transition-all duration-300 ${
+                <div className="relative z-10 text-center px-2">
+                    <div className={`text-lg sm:text-xl lg:text-2xl font-bold mb-2 transition-all duration-300 ${
                         isOver ? 'animate-pulse scale-110' : 'group-hover:scale-105'
                     }`}>
                         {label}
                     </div>
                     
-                    <div className={`text-sm opacity-80 transition-all duration-300 ${
-                        isOver ? 'font-semibold text-base' : ''
+                    <div className={`text-xs sm:text-sm opacity-80 transition-all duration-300 ${
+                        isOver ? 'font-semibold sm:text-base' : ''
                     }`}>
                         {isOver ? (
                             <div className="flex items-center justify-center gap-2">
                                 <div className="w-2 h-2 bg-current rounded-full animate-ping"></div>
-                                <span>Solte a tarefa aqui!</span>
+                                <span className="hidden sm:inline">Solte a tarefa aqui!</span>
+                                <span className="sm:hidden">Solte aqui!</span>
                                 <div className="w-2 h-2 bg-current rounded-full animate-ping"></div>
                             </div>
                         ) : (
-                            'Arraste tarefas para esta zona'
+                            <>
+                                <span className="hidden sm:inline">Arraste tarefas para esta zona</span>
+                                <span className="sm:hidden">Arraste aqui</span>
+                            </>
                         )}
                     </div>
                 </div>
@@ -724,43 +730,46 @@ const Dashboard = () => {
                             </SortableContext>
 
                             <div className="mt-16 p-10 bg-gradient-to-br from-gray-900/50 to-gray-800/50 rounded-3xl border border-gray-700/60 backdrop-blur-sm">
-                                <div className="text-center mb-10">
+                                <div className="text-center mb-6 sm:mb-8 lg:mb-10">
                                     <div className="inline-flex items-center gap-3 mb-4">
-                                        <div className="w-8 h-8 bg-gradient-to-br from-lime-500 to-lime-600 rounded-lg flex items-center justify-center">
-                                            <svg className="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-lime-500 to-lime-600 rounded-lg flex items-center justify-center">
+                                            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
                                             </svg>
                                         </div>
-                                        <h3 className="text-2xl font-bold text-gray-100">Zonas de Drag-and-Drop</h3>
+                                        <h3 className="text-xl sm:text-2xl font-bold text-gray-100">Zonas de Drag-and-Drop</h3>
                                     </div>
-                                    <p className="text-gray-400 text-lg">Arraste as tarefas para as zonas abaixo para alterar o status</p>
-                                    <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-lime-500/20 text-lime-400 rounded-full text-sm font-medium border border-lime-500/30">
+                                    <p className="text-gray-400 text-base sm:text-lg px-4">Arraste as tarefas para as zonas abaixo para alterar o status</p>
+                                    <div className="mt-4 inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-lime-500/20 text-lime-400 rounded-full text-xs sm:text-sm font-medium border border-lime-500/30">
                                         <div className="w-2 h-2 bg-lime-400 rounded-full animate-pulse"></div>
-                                        Drag-and-Drop
+                                        <span className="hidden sm:inline">Drag-and-Drop</span>
+                                        <span className="sm:hidden">Arraste</span>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                                     <DropZone id="todo" label="📋 A Fazer" color="blue" />
                                     <DropZone id="doing" label="⏳ Em Progresso" color="yellow" />
-                                    <DropZone id="done" label="✅ Concluído" color="green" />
+                                    <div className="sm:col-span-2 lg:col-span-1">
+                                        <DropZone id="done" label="✅ Concluído" color="green" />
+                                    </div>
                                 </div>
                                 
-                                <div className="mt-8 text-center">
-                                    <div className="inline-flex items-center gap-6 text-sm text-gray-500">
-                                        <div className="flex items-center gap-2">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="mt-6 sm:mt-8 text-center">
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-500">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
                                             </svg>
-                                            <span>Clique e segure</span>
+                                            <span>Toque e segure</span>
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                             </svg>
                                             <span>Arraste para a zona</span>
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
                                             <span>Solte para atualizar</span>
