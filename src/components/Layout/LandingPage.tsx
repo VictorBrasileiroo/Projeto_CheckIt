@@ -32,7 +32,7 @@ const LandingPage = () => {
 
       <main className="container mx-auto px-6 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-lime-400 via-lime-500 to-lime-600 bg-clip-text text-transparent leading-tight">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-lime-300 via-lime-500 to-lime-900 bg-clip-text text-transparent leading-tight">
             Organize sua vida
             
             com 
@@ -130,7 +130,7 @@ const LandingPage = () => {
             to="/register"
             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-lime-500 to-lime-600 hover:from-lime-400 hover:to-lime-500 text-white rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
           >
-            Começar Agora - É Grátis
+            Começar Agora 
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
