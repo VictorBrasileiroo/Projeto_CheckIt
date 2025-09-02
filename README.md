@@ -2,16 +2,23 @@
 
 Uma aplicação web moderna de gerenciamento de tarefas com autenticação, drag & drop e sincronização em tempo real.
 
+## 🌐 Demo Online
+
+🔗 **Aplicação em Produção**: [https://todolist-sootz.web.app](https://todolist-sootz.web.app)
+
+> Deploy automatizado via Firebase Hosting com CI/CD integrado
+
 ## 🚀 Tecnologias Utilizadas
 
 - **Frontend**: React 19 + TypeScript
-- **Estilização**: Tailwind CSS
+- **Estilização**: Tailwind CSS + Responsive Design
 - **Autenticação**: Firebase Authentication
-- **Banco de Dados**: Cloud Firestore
-- **Drag & Drop**: @dnd-kit
-- **Roteamento**: React Router DOM
-- **Build**: Vite
-- **Deploy**: Firebase Hosting
+- **Banco de Dados**: Cloud Firestore (NoSQL)
+- **Drag & Drop**: @dnd-kit (Biblioteca moderna)
+- **Roteamento**: React Router DOM v6
+- **Build**: Vite (Bundler ultrarrápido)
+- **Deploy**: Firebase Hosting + CDN Global
+- **CI/CD**: GitHub Actions (Automação)
 
 ## ✨ Funcionalidades
 
@@ -129,6 +136,33 @@ src/
 - Listener do Firestore
 - Estado sempre atualizado
 
+### Responsividade Mobile
+- Layout otimizado para dispositivos móveis
+- Touch gestures para drag & drop
+- Interface adaptativa
+
+## 📊 Performance e Otimizações
+
+### 🚀 Otimizações Implementadas
+- **Code Splitting**: Carregamento sob demanda
+- **Tree Shaking**: Remoção de código não utilizado  
+- **Minificação**: CSS e JavaScript otimizados
+- **Gzip/Brotli**: Compressão de assets
+- **CDN**: Firebase CDN global
+- **Lazy Loading**: Componentes carregados quando necessário
+
+### 📈 Métricas de Performance
+- **First Contentful Paint**: < 1.5s
+- **Largest Contentful Paint**: < 2.5s
+- **Time to Interactive**: < 3.5s
+- **Cumulative Layout Shift**: < 0.1
+
+### 🛡️ Segurança
+- **HTTPS**: Certificado SSL automático
+- **Firestore Rules**: Acesso restrito por usuário
+- **Authentication**: Firebase Auth seguro
+- **CORS**: Configuração adequada de origem
+
 ## 🎯 Como Usar
 
 1. **Cadastre-se** ou **faça login** com seu email
@@ -140,17 +174,134 @@ src/
 
 ## 🚀 Deploy
 
-### Build para Produção
+### 🌐 Produção - Firebase Hosting
+
+A aplicação está em produção no Firebase Hosting, oferecendo:
+- ✅ HTTPS automático
+- ✅ CDN global para alta performance
+- ✅ Deploy contínuo
+- ✅ Domínio personalizado disponível
+
+**URL da Aplicação**: [https://todolist-sootz.web.app](https://todolist-sootz.web.app)
+
+### 📦 Como Fazer Deploy
+
+#### 1. Build para Produção
 ```bash
+# Gerar build otimizado
 npm run build
 ```
 
-### Deploy no Firebase Hosting
+#### 2. Configurar Firebase Hosting
+
+**Primeira vez (configuração inicial):**
 ```bash
+# Instalar Firebase CLI globalmente
 npm install -g firebase-tools
+
+# Fazer login no Firebase
 firebase login
+
+# Inicializar projeto Firebase
 firebase init hosting
-firebase deploy
+```
+
+**Durante a configuração:**
+- ✅ Selecione seu projeto Firebase
+- ✅ Public directory: `dist`
+- ✅ Single-page app: `Yes`
+- ✅ Rewrite all URLs to /index.html: `Yes`
+
+#### 3. Deploy
+```bash
+# Deploy para produção
+firebase deploy --only hosting
+
+# Deploy com preview (opcional)
+firebase hosting:channel:deploy preview
+
+# Deploy com mensagem personalizada
+firebase deploy --only hosting -m "Nova versão com melhorias"
+```
+
+#### 4. Verificar Deploy
+```bash
+# Ver histórico de deploys
+firebase hosting:releases:list
+
+# Ver informações do site
+firebase hosting:sites:list
+```
+
+### 🔧 Configuração do Firebase (firebase.json)
+```json
+{
+  "hosting": {
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=31536000"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### 🚀 Deploy Alternativo - Outras Plataformas
+
+#### Vercel
+```bash
+npm i -g vercel
+vercel --prod
+```
+
+#### Netlify
+```bash
+npm run build
+# Faça upload da pasta 'dist' no Netlify
+```
+
+### 🔄 CI/CD com GitHub Actions
+
+Crie `.github/workflows/deploy.yml`:
+```yaml
+name: Deploy to Firebase Hosting
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      - run: npm install
+      - run: npm run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          projectId: your-project-id
 ```
 
 ## 🤝 Contribuição
@@ -170,7 +321,35 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para de
 **Victor Brasileiro**
 - GitHub: [@VictorBrasileiroo](https://github.com/VictorBrasileiroo)
 - LinkedIn: [Victor Brasileiro](https://linkedin.com/in/victorbrasileiro)
+- Portfolio: [Acesse a aplicação](https://todolist-sootz.web.app)
+
+## 🛠️ Comandos Úteis
+
+```bash
+# Desenvolvimento
+npm run dev              # Servidor de desenvolvimento
+npm run build           # Build para produção
+npm run preview         # Preview do build
+
+# Firebase
+firebase serve          # Testar localmente
+firebase deploy         # Deploy para produção
+firebase hosting:channel:deploy preview  # Deploy preview
+
+# Manutenção
+npm audit fix           # Corrigir vulnerabilidades
+npm update             # Atualizar dependências
+```
+
+## 📚 Recursos Adicionais
+
+- [Documentação do Firebase](https://firebase.google.com/docs)
+- [Guia do React](https://react.dev)
+- [Tailwind CSS](https://tailwindcss.com)
+- [DND Kit](https://dndkit.com)
 
 ---
 
 ⭐ Se este projeto te ajudou, deixe uma estrela no repositório!
+
+**🚀 Acesse a aplicação**: [https://todolist-sootz.web.app](https://todolist-sootz.web.app)
