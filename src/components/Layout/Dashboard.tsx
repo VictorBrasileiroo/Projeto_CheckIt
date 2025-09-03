@@ -501,8 +501,8 @@ const Dashboard = () => {
                         </div>
                         <div className="flex items-center space-x-6">
                             <div className="text-right">
-                                <p className="text-sm text-gray-300">Olá, <span className="font-semibold text-lime-400">{user?.email},</span></p>
-                                <p className="text-xs text-gray-500">Seja bem-vindo!</p>
+                                <p className="text-sm text-gray-300">Olá, <span className="font-semibold text-lime-400">{user?.displayName || user?.email?.split('@')[0]}👋🏻</span></p>
+                                <p className="text-xs text-gray-500">Seja bem-vindo(a)!</p>
                             </div>
                             <button
                                 onClick={sairToDo}

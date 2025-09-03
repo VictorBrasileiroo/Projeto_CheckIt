@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,7 +29,7 @@ const Register = () => {
     try {
       setError('');
       setLoading(true);
-      await register(email, password);
+      await register(nome, email, password);
       navigate('/dashboard');
     } catch (error: any) {
       setError('Falha ao criar conta: ' + error.message);
@@ -56,6 +57,22 @@ const Register = () => {
           )}
           
           <div className="space-y-4">
+            <div>
+              <label htmlFor="nome" className="block text-sm font-medium text-gray-300">
+                Nome Completo
+              </label>
+              <input
+                id="nome"
+                name="nome"
+                type="text"
+                required
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-700 rounded-md placeholder-gray-500 text-white bg-gray-800 focus:outline-none focus:ring-lime-500 focus:border-lime-500"
+                placeholder="Digite seu nome completo"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
+            </div>
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                 Email
