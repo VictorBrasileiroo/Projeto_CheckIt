@@ -261,7 +261,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para de
 
 **Victor Brasileiro**
 - GitHub: [@VictorBrasileiroo](https://github.com/VictorBrasileiroo)
-- LinkedIn: [Victor Brasileiro](https://linkedin.com/in/victorbrasileiroo)
+- LinkedIn: [Victor Brasileiro](https://linkedin.com/in/victorbrasileirooo)
 - Portfolio: [Acesse a aplicação](https://portifoliovictorbrasileiroo.netlify.app/)
 
 ## 🛠️ Comandos Úteis
