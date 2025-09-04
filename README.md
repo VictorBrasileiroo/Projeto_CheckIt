@@ -106,14 +106,20 @@ src/
 │   ├── Layout/
 │   │   ├── Dashboard.tsx
 │   │   └── LandingPage.tsx
+│
 ├── contexts/
 │   └── AuthContext.tsx
+│
 ├── services/
 │   ├── Firebase.tsx
-│   └── TodoService.tsx
+│   ├── TodoService.tsx
+│   └── testTodoService.tsx
+│
 ├── types/
-│   └── Index.tsx
+│   └── index.ts
+│
 └── App.tsx
+
 
 ```
 
