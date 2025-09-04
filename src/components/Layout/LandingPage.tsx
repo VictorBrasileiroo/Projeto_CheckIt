@@ -6,7 +6,7 @@ const LandingPage = () => {
       <header className="container mx-auto px-6 py-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-lime-400 to-lime-500 rounded-lg flex items-center justify-center shadow-lg">
+            <div className=" w-10 h-10 bg-gradient-to-br from-lime-400 to-lime-500 rounded-lg flex items-center justify-center shadow-lg">
               <svg className="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -16,7 +16,7 @@ const LandingPage = () => {
           <div className="flex gap-4">
             <Link
               to="/login"
-              className="px-4 py-2 text-gray-300 hover:text-lime-400 border-2 rounded-xl transition-colors font-medium"
+              className="px-4 py-4 sm:py-2 text-gray-300 hover:text-lime-400 border-2 rounded-xl transition-colors font-medium"
             >
               Entrar
             </Link>

@@ -24,6 +24,7 @@ Uma aplicação web moderna de gerenciamento de tarefas com autenticação, drag
 
 ### Autenticação
 - [x] Login com email e senha
+- [x] Login com Google OAuth
 - [x] Cadastro de novos usuários
 - [x] Logout seguro
 - [x] Sessões persistentes
@@ -65,7 +66,7 @@ npm install
 
 3. **Configure o Firebase**
    - Crie um projeto no [Firebase Console](https://console.firebase.google.com)
-   - Ative Authentication (Email/Password)
+   - Ative Authentication (Email/Password + Google)
    - Ative Cloud Firestore
    - Copie as configurações do Firebase
    - Crie o arquivo `src/services/firebaseConfig.js` com suas configurações
@@ -145,7 +146,7 @@ npm run test:run
 
 ## 🎯 Como Usar
 
-1. **Cadastre-se** ou **faça login** com seu email
+1. **Cadastre-se** ou **faça login** com seu email (ou use Google)
 2. **Crie tarefas** com título e descrição opcional
 3. **Use os filtros** para visualizar tarefas por status
 4. **Arraste e solte** tarefas entre as zonas de status
