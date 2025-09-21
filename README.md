@@ -1,4 +1,4 @@
-# TodoList Sootz 📝
+# CheckIt 📝
 
 Uma aplicação web moderna de gerenciamento de tarefas com autenticação, drag & drop e sincronização em tempo real.
 
@@ -55,7 +55,7 @@ Uma aplicação web moderna de gerenciamento de tarefas com autenticação, drag
 
 1. **Clone o repositório**
 ```bash
-git clone https://github.com/VictorBrasileiroo/ToDoList_Sootz.git
+git clone https://github.com/VictorBrasileiroo/CheckIt.git
 cd ToDoList_Sootz
 ```
 
