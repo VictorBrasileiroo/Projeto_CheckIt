@@ -1,10 +1,10 @@
-# TodoList Sootz 📝
+# CheckIt 📝
 
 Uma aplicação web moderna de gerenciamento de tarefas com autenticação, drag & drop e sincronização em tempo real.
 
 ## 🌐 Demo Online
 
-🔗 **Aplicação em Produção**: [https://todolistsootz.web.app/](https://todolistsootz.web.app/)
+🔗 **Aplicação em Produção**: <a href="https://todolistsootz.web.app/">Clique aqui!</a>
 
 > Deploy automatizado via Firebase Hosting com Github integrado
 
@@ -55,7 +55,7 @@ Uma aplicação web moderna de gerenciamento de tarefas com autenticação, drag
 
 1. **Clone o repositório**
 ```bash
-git clone https://github.com/VictorBrasileiroo/ToDoList_Sootz.git
+git clone https://github.com/VictorBrasileiroo/CheckIt.git
 cd ToDoList_Sootz
 ```
 
@@ -169,7 +169,7 @@ A aplicação está em produção no Firebase Hosting, oferecendo:
 - ✅ Deploy contínuo
 - ✅ Domínio personalizado disponível
 
-**URL da Aplicação**: [https://todolistsootz.web.app/](https://todolistsootz.web.app/)
+**URL da Aplicação**: [https://todolistsootz.web.app/](Clique aqui!)
 
 ### 📦 Como Fazer Deploy
 
@@ -299,4 +299,4 @@ npm update             # Atualizar dependências
 
 ⭐ Se este projeto te ajudou, deixe uma estrela no repositório!
 
-**🚀 Acesse a aplicação**: [https://todolistsootz.web.app/](https://todolistsootz.web.app/)
+**🚀 Acesse a aplicação**: <a href="https://todolistsootz.web.app/">Clique aqui<!/a>
