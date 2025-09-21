@@ -494,7 +494,7 @@ const Dashboard = () => {
                             <div>
                                 <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-100 to-gray-300 bg-clip-text text-transparent">
                                     
-                                        TodoList Sootz
+                                        CheckIt
                                 </h1>
                             </div>
                             </button>
