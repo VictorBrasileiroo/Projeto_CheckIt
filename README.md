@@ -4,7 +4,7 @@ Uma aplicação web moderna de gerenciamento de tarefas com autenticação, drag
 
 ## 🌐 Demo Online
 
-🔗 **Aplicação em Produção**: [https://todolistsootz.web.app/](https://todolistsootz.web.app/)
+🔗 **Aplicação em Produção**: [https://todolistsootz.web.app/](Clique aqui!)
 
 > Deploy automatizado via Firebase Hosting com Github integrado
 
@@ -169,7 +169,7 @@ A aplicação está em produção no Firebase Hosting, oferecendo:
 - ✅ Deploy contínuo
 - ✅ Domínio personalizado disponível
 
-**URL da Aplicação**: [https://todolistsootz.web.app/](https://todolistsootz.web.app/)
+**URL da Aplicação**: [https://todolistsootz.web.app/](Clique aqui!)
 
 ### 📦 Como Fazer Deploy
 
